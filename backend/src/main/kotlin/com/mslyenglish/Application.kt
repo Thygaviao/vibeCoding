@@ -20,6 +20,7 @@ import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.slf4j.LoggerFactory
 
 fun Application.module() {
     val appConfig = environment.config.toAppConfig()
@@ -28,6 +29,7 @@ fun Application.module() {
     val authService = AuthService(appConfig.jwt)
     authService.ensureDefaultAdmin(appConfig.defaultAdmin.username, appConfig.defaultAdmin.password)
     val submissionService = SubmissionService(appConfig.storage.uploadDir)
+    val logger = LoggerFactory.getLogger("Application")
 
     install(CallLogging)
     install(ContentNegotiation) { json() }
@@ -40,7 +42,8 @@ fun Application.module() {
     }
     install(StatusPages) {
         exception<Throwable> { call, cause ->
-            call.respond(HttpStatusCode.InternalServerError, ApiMessage(cause.message ?: "Internal server error"))
+            logger.error("Unhandled application error", cause)
+            call.respond(HttpStatusCode.InternalServerError, ApiMessage("Internal server error"))
         }
     }
     install(Authentication) {

@@ -12,7 +12,8 @@ CREATE TABLE IF NOT EXISTS submissions (
     homework_topic VARCHAR(200) NOT NULL,
     notes TEXT,
     status VARCHAR(30) NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT NOW()
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    CONSTRAINT submissions_status_check CHECK (status IN ('NEW', 'REVIEWED', 'ARCHIVED'))
 );
 
 CREATE TABLE IF NOT EXISTS submission_files (
@@ -24,3 +25,8 @@ CREATE TABLE IF NOT EXISTS submission_files (
     size_bytes BIGINT NOT NULL,
     uploaded_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
+
+CREATE INDEX IF NOT EXISTS idx_submissions_created_at ON submissions(created_at);
+CREATE INDEX IF NOT EXISTS idx_submissions_student_name ON submissions(student_name);
+CREATE INDEX IF NOT EXISTS idx_submissions_class_group ON submissions(class_group);
+CREATE INDEX IF NOT EXISTS idx_submissions_status ON submissions(status);
