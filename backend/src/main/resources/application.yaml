@@ -1,0 +1,25 @@
+ktor:
+  deployment:
+    port: 8080
+  application:
+    modules:
+      - com.mslyenglish.ApplicationKt.module
+
+app:
+  jwt:
+    issuer: "msly-english"
+    audience: "msly-admin"
+    secret: "change-me-super-secret"
+    expiresInMs: 86400000
+  storage:
+    uploadDir: "uploads"
+  admin:
+    defaultUsername: "admin"
+    defaultPassword: "Admin123!"
+
+database:
+  jdbcUrl: "jdbc:postgresql://localhost:5432/msly_english"
+  driverClassName: "org.postgresql.Driver"
+  username: "postgres"
+  password: "postgres"
+  maximumPoolSize: 5
